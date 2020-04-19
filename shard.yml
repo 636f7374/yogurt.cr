@@ -1,0 +1,11 @@
+name: yogurt
+version: 0.1.0
+
+dependencies:
+  readline:
+    github: crystal-lang/crystal-readline
+
+authors:
+  - 636f7374
+
+license: MIT
