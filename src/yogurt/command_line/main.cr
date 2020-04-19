@@ -17,29 +17,22 @@ module Yogurt::CommandLine
   end
 
   def self.get_input_master_key(config : Config) : String
-    value = Utils::Secret.gets prompt: "> Enter MasterKey: "
-
-    STDOUT << "\e[A\e[K"
-    Render.master_key "*" * value.size if config.showMasterKey
+    value = Utils::Secret.gets prompt: "Enter MasterKey: "
 
     value
   end
 
   def self.get_input_secure_id(config : Config) : String
-    return Yogurt.create_secure_id get_input_title_name if config.titleFlag.title?
+    return Utils.input prompt: "Enter Secure_Id: " if config.titleFlag.secure_id?
 
-    value = Utils.input prompt: "> Enter Secure_Id: "
-    STDOUT << "\e[A\e[K"
+    value = Yogurt.create_secure_id get_input_title_name
     Render.secure_id text: value
 
     value
   end
 
   def self.get_input_title_name : String
-    value = Utils.input prompt: "> Enter TitleName: "
-
-    STDOUT << "\e[A\e[K"
-    Render.title_name text: value
+    value = Utils.input prompt: "Enter TitleName: "
 
     value
   end
