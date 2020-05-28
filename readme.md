@@ -24,26 +24,14 @@
 * It can be used either under CommandLine or as Crystal Shard.
 * Generate (SecretKey, UserName, EmailAddress, PinCode) through MasterKey and SecureId.
 
-### RoadMap
+## Next
 
 * [ ] Add Spec Unit & Travis-CI Test.
 * [ ] ...
 
-## Use Yogart
+## Usage
 
-### Used as Shard
-
-Add this to your application's shard.yml:
-
-```yaml
-dependencies:
-  yogurt:
-    github: 636f7374/yogurt.cr
-```
-
-### Usage
-
-* Yogart - Example
+* Simple Example
 
 ```crystal
 require "yogart"
@@ -53,6 +41,16 @@ secret_key = Yogart.create_secret_key master_key: "abc123", secure_id: secure_id
 user_name = Yogart.create_user_name secret_key: secret_key, secure_id: secure_id, length: 15_i32, iterations: 16384_i32
 email = Yogart.create_email domain: "example.com", user_name: user_name, secure_id: secure_id, iterations: 15_i32, length: 20_i32
 pin_code = Yogart.create_pin secret_key: secret_key, secure_id: secure_id, iterations: 16384_i32
+```
+
+### Used as Shard
+
+Add this to your application's shard.yml:
+
+```yaml
+dependencies:
+  yogurt:
+    github: 636f7374/yogurt.cr
 ```
 
 ### Installation
