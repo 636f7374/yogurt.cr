@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Actions - Use CheckOut@V2
       uses: actions/checkout@v2
+    - name: Install - System Dependencies
+      run: apt-get install openssl libreadline-dev -y
     - name: Install - Yogurt Dependencies
       run: shards install
     - name: Test - Crystal Spec
