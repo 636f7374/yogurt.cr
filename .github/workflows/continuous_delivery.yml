@@ -18,7 +18,11 @@ jobs:
     steps:
     - name: Actions - Use CheckOut@V2
       uses: actions/checkout@v2
-    - name: Install - System Dependencies
+    - name: Install - Apt-Get Update
+      run: apt-get update
+    - name: Install - Apt-Get Upgrade
+      run: apt-get -y upgrade
+    - name: Install - Apt-Get Dependencies
       run: apt-get install openssl libreadline-dev -y
     - name: Install - Yogurt Dependencies
       run: shards install
