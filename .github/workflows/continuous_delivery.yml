@@ -1,0 +1,75 @@
+name: Continuous Delivery
+
+on: 
+  release:
+    types:
+      - created
+
+jobs:
+  linux:
+    name: Continuous Delivery - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: 
+        - ubuntu-latest
+    container:
+      image: crystallang/crystal
+    steps:
+    - name: Actions - Use CheckOut@V2
+      uses: actions/checkout@v2
+    - name: Install - Yogurt Dependencies
+      run: shards install
+    - name: Test - Crystal Spec
+      run: crystal spec --error-trace --stats --progress --no-debug
+    - name: Deploy - Create Directory
+      run: mkdir -p bin/linux
+    - name: Deploy - Yogurt Build
+      run: crystal build src/yogurt.cr -s --release --no-debug -o bin/linux/yogurt
+    - name: Deploy - Create Archive
+      run: tar -cvzf Yogurt_Linux.tar.gz bin/linux/yogurt
+    - name: Actions - Upload Release
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./Yogurt_Linux.tar.gz
+        asset_name: Yogurt_Linux.tar.gz
+        asset_content_type: application/x-gzip
+
+  macOS:
+    name: Continuous Delivery - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: 
+        - macOS-latest
+    steps:
+    - name: Actions - Use CheckOut@V2
+      uses: actions/checkout@v2
+    - name: Install - Brew Package Management
+      run: brew update
+    - name: Install - Crystal Language
+      run: brew install crystal
+    - name: Install - Yogurt Dependencies
+      run: shards install
+    - name: Test - Crystal Spec
+      run: crystal spec --error-trace --stats --progress --no-debug
+    - name: Deploy - Create Directory
+      run: mkdir -p bin/darwin
+    - name: Deploy - Yogurt Build
+      run: crystal build src/yogurt.cr -s --no-debug -o bin/darwin/yogurt
+    - name: Deploy - Create Archive
+      run: tar -cvzf Yogurt_macOS.tar.gz bin/darwin/yogurt
+    - name: Actions - Upload Release
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./Yogurt_macOS.tar.gz
+        asset_name: Yogurt_macOS.tar.gz
+        asset_content_type: application/x-gzip
