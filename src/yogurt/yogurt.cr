@@ -191,7 +191,8 @@ module Yogurt
 
   def self.create_secure_id(value : String, length : Int32 = 32_i32)
     sha384_digest = OpenSSL::Digest.new "sha384"
-    value = sha384_digest.update(value).to_s
+    sha384_digest.update value
+    value = sha384_digest.final.hexstring
 
     left, right = center value, length
     value[left..right].gsub(UUID_REGEX, UUID_REPLACEMENT).upcase
@@ -253,7 +254,7 @@ module Yogurt
     iterations.times do |time|
       # Blake2B512 MasterKey
       blake2b512_master_key = OpenSSL::Digest.new(name: "blake2b512").update data: secret_key
-      blake2b512_master_key = blake2b512_master_key.base64digest
+      blake2b512_master_key = Base64.strict_encode blake2b512_master_key.final
       blake2b512_message = String.build { |io| io << blake2b512_master_key << ":" << adler32_secure_id }
 
       # Standard HMAC Message
