@@ -5,6 +5,10 @@ dependencies:
   readline:
     github: crystal-lang/crystal-readline
 
+targets:
+  yogurt:
+    main: cli.cr
+
 authors:
   - 636f7374
 
